@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Email Expense Tracker</string>
+
+    <string name="login_title">Email Expense Tracker</string>
+    <string name="login_description">Automatically categorize your receipts and track spending securely using your Gmail inbox.</string>
+    <string name="btn_sign_in_google">Sign in with Google</string>
+
+    <string name="dashboard_title">My Expenses</string>
+    <string name="content_desc_sync">Sync Emails</string>
+    <string name="title_summary_chart">Total Monthly Expenses</string>
+    <string name="title_recent_transactions">Recent Transactions</string>
+    <string name="empty_state_expenses">No expenses found. Tap the refresh icon to sync.</string>
+</resources>
