@@ -30,7 +30,7 @@ An automated, privacy-conscious Android application that securely connects to yo
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/yourusername/email-expense-tracker.git](https://github.com/yourusername/email-expense-tracker.git)
+   git clone https://github.com/mtepenner/android-expense-tracker.git
    ```
 2. **Open the project in Android Studio:**
    * Launch Android Studio and select `File > Open`, then navigate to the cloned directory.
