@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,11 +19,21 @@ import com.yourname.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.yourname.expensetracker.viewmodel.AuthViewModel
 import com.yourname.expensetracker.viewmodel.ExpenseViewModel
 
+// 1. Define the Factory to handle ViewModel injection
+class ExpenseViewModelFactory(private val repository: ExpenseRepo) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(ExpenseViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return ExpenseViewModel(repository) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Initialize our Data Layer
         val database = AppDatabase.getDatabase(this)
         val repository = ExpenseRepo(
             expenseDao = database.expenseDao()
@@ -31,25 +43,20 @@ class MainActivity : ComponentActivity() {
             ExpenseTrackerTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     
-                    // 2. Set up the Navigation Controller
                     val navController = rememberNavController()
-                    
-                    // 3. Set up our ViewModels
                     val authViewModel: AuthViewModel = viewModel()
-                    // Note: In a real app, use a ViewModel Provider Factory to pass the repository, 
-                    // or use a Dependency Injection framework like Hilt.
-                    val expenseViewModel = ExpenseViewModel(repository) 
 
-                    // 4. The Navigation Map
+                    // 2. FIX: Use the Factory to instantiate ExpenseViewModel
+                    val expenseViewModel: ExpenseViewModel = viewModel(
+                        factory = ExpenseViewModelFactory(repository)
+                    )
+
                     NavHost(navController = navController, startDestination = "login") {
                         
-                        // Route 1: The Login Screen
                         composable("login") {
                             LoginScreen(
                                 onLoginClick = {
                                     authViewModel.simulateLogin()
-                                    // Navigate to dashboard and remove login from the backstack 
-                                    // so the 'back' button doesn't take them back to the login screen
                                     navController.navigate("dashboard") {
                                         popUpTo("login") { inclusive = true }
                                     }
@@ -57,19 +64,16 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Route 2: The Main Dashboard
                         composable("dashboard") {
                             DashboardScreen(
                                 expensesFlow = expenseViewModel.allExpenses,
                                 totalExpensesFlow = expenseViewModel.totalExpenses,
                                 onSyncClick = {
-                                    // Pass the mock token to trigger our stubbed API fetch
                                     expenseViewModel.syncNewEmails("mock_oauth_token")
                                 }
                             )
                         }
                     }
-                    
                 }
             }
         }
