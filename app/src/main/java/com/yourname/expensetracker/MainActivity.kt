@@ -9,8 +9,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.yourname.expensetracker.api.EmailParser
-import com.yourname.expensetracker.api.GmailClient
 import com.yourname.expensetracker.data.local.AppDatabase
 import com.yourname.expensetracker.data.repository.ExpenseRepo
 import com.yourname.expensetracker.ui.screens.DashboardScreen
@@ -18,7 +16,6 @@ import com.yourname.expensetracker.ui.screens.LoginScreen
 import com.yourname.expensetracker.ui.theme.ExpenseTrackerTheme
 import com.yourname.expensetracker.viewmodel.AuthViewModel
 import com.yourname.expensetracker.viewmodel.ExpenseViewModel
-import com.yourname.expensetracker.viewmodel.ExpenseViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
